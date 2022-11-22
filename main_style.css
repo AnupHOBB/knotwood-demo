@@ -14,7 +14,7 @@
     left: 75%;
     width: 25%;
     height: 100%;
-    background-color: gainsboro;
+    background-color: #8BDDFF;
     align-self: flex-end;
 }
 
@@ -29,7 +29,9 @@
 .title
 {
     text-align: center;
+    color: #182C61;
     font-size: 3.2vh;
+    font-family:cursive;
 }
 
 .grid-container
@@ -40,7 +42,7 @@
     display: grid;
     grid-template-columns: auto auto auto;
     gap: 1%;
-    background-color: #2196F3;
+    background-color: #1B9CFC;
     padding: 1%;
     height: 40%;
     width: 98%;
