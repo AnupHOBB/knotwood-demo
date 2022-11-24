@@ -1,6 +1,5 @@
-/**@type {CanvasRenderingContext2D} */ 
-var context;
 var canvas;
+var context;
 var canvasImageData;
 
 class rgb
@@ -19,47 +18,21 @@ function on_page_load()
     context = canvas.getContext("2d");
     var reader = new XMLHttpRequest();
     reader.open("GET", "http://127.0.0.1:5500/house.png");
-    reader.onreadystatechange = function()
+    reader.onreadystatechange = () =>
     {
         if (reader.readyState == 4 && reader.status == 200)
-            set_blob_image(reader.response);
+            draw_image(reader.response);
     }
     reader.responseType = 'blob';
     reader.send();
 }
 
-function set_blob_image(blob)
-{
-    let bloburl = URL.createObjectURL(blob);
-    new Promise
-    (
-        (resolve, reject) =>
-        {
-            let img = new Image();
-            img.onload = () => resolve(img);
-            img.onerror = err => reject(err);
-            img.src = bloburl;
-        }
-    )
-    .then
-    (
-        img =>
-        {
-            URL.revokeObjectURL(bloburl);
-            canvas.width = img.width;
-            canvas.height = img.height;
-            context.drawImage(img, 0, 0);
-            canvasImageData = context.getImageData(0, 0, img.width, img.height);
-        }
-    );
-}
-
-function on_grid_select(grid_id, image_id)
+function on_grid_select(grid_id)
 {
     var grid_item = document.getElementById(grid_id);
     var color = grid_item.style.backgroundColor;
-    var rgbval = get_RGB(color);
-    var imageData = get_duplicate_imagedata(canvasImageData);
+    var rgbval = to_rgb(color);
+    var imageData = duplicate_imagedata(canvasImageData);
     var pixels = imageData.data;
     for(let i=0; i<pixels.length; i+=4)
     {
@@ -70,13 +43,33 @@ function on_grid_select(grid_id, image_id)
     context.putImageData(imageData, 0, 0);
 }
 
-function get_RGB(str)
+function on_reset()
+{
+    context.putImageData(canvasImageData, 0, 0);
+}
+
+function draw_image(blob)
+{
+    let bloburl = URL.createObjectURL(blob);
+    let img = new Image();
+    img.onload = () => 
+    {
+        URL.revokeObjectURL(bloburl);
+        canvas.width = img.width;
+        canvas.height = img.height;
+        context.drawImage(img, 0, 0);
+        canvasImageData = context.getImageData(0, 0, img.width, img.height);
+    };
+    img.src = bloburl;
+}
+
+function to_rgb(str)
 {
     var match = str.match(/rgba?\((\d{1,3}), ?(\d{1,3}), ?(\d{1,3})\)?(?:, ?(\d(?:\.\d?))\))?/);
     return match ? new rgb(match[1], match[2], match[3]) : new rgb(0,0,0);
 }
 
-function get_duplicate_imagedata(/**@type {ImageData}*/source)
+function duplicate_imagedata(source)
 {
     let source_data = source.data;
     let copy_data = new Uint8ClampedArray(source_data.length);
