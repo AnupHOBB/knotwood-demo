@@ -17,7 +17,7 @@ function on_page_load()
     canvas = document.getElementById("canvas");
     context = canvas.getContext("2d");
     var reader = new XMLHttpRequest();
-    reader.open("GET", "http://127.0.0.1:5500/house.png");
+    reader.open("GET", "http://127.0.0.1:5500/house_floor.png");
     reader.onreadystatechange = () =>
     {
         if (reader.readyState == 4 && reader.status == 200)
