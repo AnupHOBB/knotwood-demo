@@ -61,14 +61,15 @@ function on_image_select(index)
     context_background.putImageData(active_image_data, 0, 0);  
 }
 
-function on_background_load(imageData, index)
+function on_background_load(image_data, index)
 {
-    original_image_data = imageData;
+    original_image_data = image_data;
+    active_image_data = original_image_data;
 }
 
-function on_texture_load(imageData, index)
+function on_texture_load(image_data, index)
 {
-    images_data[index] = imageData;
+    images_data[index] = image_data;
 }
 
 function load_textures()
