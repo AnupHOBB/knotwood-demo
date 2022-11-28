@@ -1,7 +1,7 @@
 const ROOT = "http://127.0.0.1:5500/assets/";
 const IMAGE_GRID_BASE_ID = "canvas_image";
 const IMAGES = ["floor1.png", "floor2.png", "floor3.png"];
-const images_data = new Array(3);
+const IMAGE_DATAS = new Array(3);
 
 var context_background;
 var active_image_data;
@@ -50,7 +50,7 @@ function on_image_select(index)
 {
     active_image_data = duplicate_imagedata(original_image_data);
     let pixels = active_image_data.data;
-    let texels = images_data[index].data;
+    let texels = IMAGE_DATAS[index].data;
     for(let i=0; i<pixels.length; i+=4)
     {
         pixels[i] = multiply_color(pixels[i], texels[i]);
@@ -69,7 +69,7 @@ function on_background_load(image_data, index)
 
 function on_texture_load(image_data, index)
 {
-    images_data[index] = image_data;
+    IMAGE_DATAS[index] = image_data;
 }
 
 function load_textures()
