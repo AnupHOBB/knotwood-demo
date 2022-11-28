@@ -33,11 +33,10 @@ function on_reset()
 
 function on_color_select(grid_id)
 {
-    var grid_item = document.getElementById(grid_id);
-    var color = grid_item.style.backgroundColor;
-    var rgbval = to_rgb(color);
-    var image_data = duplicate_imagedata(active_image_data);
-    var pixels = image_data.data;
+    let grid_item = document.getElementById(grid_id);
+    let rgbval = to_rgb(grid_item.style.backgroundColor);
+    let image_data = duplicate_imagedata(active_image_data);
+    let pixels = image_data.data;
     for(let i=0; i<pixels.length; i+=4)
     {
         pixels[i] = multiply_color(pixels[i], rgbval.r);
@@ -50,8 +49,8 @@ function on_color_select(grid_id)
 function on_image_select(index)
 {
     active_image_data = duplicate_imagedata(original_image_data);
-    var pixels = active_image_data.data;
-    var texels = images_data[index].data;
+    let pixels = active_image_data.data;
+    let texels = images_data[index].data;
     for(let i=0; i<pixels.length; i+=4)
     {
         pixels[i] = multiply_color(pixels[i], texels[i]);
@@ -80,7 +79,7 @@ function load_textures()
 
 function load_image(canvas, url, onload, index)
 {
-    var reader = new XMLHttpRequest();
+    let reader = new XMLHttpRequest();
     reader.open("GET", url);
     reader.onreadystatechange = () =>
     {
@@ -109,7 +108,7 @@ function draw_image(canvas, blob, onload, index)
 
 function to_rgb(str)
 {
-    var match = str.match(/rgba?\((\d{1,3}), ?(\d{1,3}), ?(\d{1,3})\)?(?:, ?(\d(?:\.\d?))\))?/);
+    let match = str.match(/rgba?\((\d{1,3}), ?(\d{1,3}), ?(\d{1,3})\)?(?:, ?(\d(?:\.\d?))\))?/);
     return match ? new rgb(match[1], match[2], match[3]) : new rgb(0,0,0);
 }
 
