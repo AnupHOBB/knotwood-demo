@@ -42,7 +42,7 @@
     div.list-item-color
     {
         min-width: 30%;
-        margin-right: 20px;
+        margin-right: 5%;
         height: 100%;
         border-radius: 3ch;
     }
@@ -65,8 +65,9 @@
     canvas.list-item-image
     {
         position: relative;
-        width: 88%;
+        width: 30%;
         height: 100%;
+        margin-right: 3%;
         border-radius: 3ch;
     }
 
@@ -99,7 +100,7 @@
     div.list-item-color
     {
         min-width: 27%;
-        margin-right: 20px;
+        margin-right: 10%;
         height: 90%;
         border-radius: 3ch;
     }
@@ -123,8 +124,9 @@
     canvas.list-item-image
     {
         position: relative;
-        width: 80%;
+        width: 30%;
         height: 90%;
+        margin-right: 10%;
         border-radius: 3ch;
     }
     
