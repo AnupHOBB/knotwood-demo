@@ -1,7 +1,6 @@
 const BACKEND = "http://127.0.0.1:8080";
 const ASSET_ROOT = "assets/";
-const IMAGES = [];
-const IMAGE_DATAS = new Array(3);
+const IMAGE_DATAS = [];
 
 var contextBackground;
 var activeImageData;
@@ -19,8 +18,8 @@ class rgb
 
 function onPageLoad()
 {
-    loadImage(ASSET_ROOT+"house_floor.png", onBackgroundLoad, -1);
-    fetchFileNames();
+    requestServer(ASSET_ROOT+"house_floor.png", "blob", onImageDownload, onBackgroundLoad);
+    requestServer(BACKEND, "text", onFileListDownload);
 }
 
 function onReset()
@@ -59,7 +58,7 @@ function onImageSelect(index)
     contextBackground.putImageData(activeImageData, 0, 0);  
 }
 
-function onBackgroundLoad(img, index)
+function onBackgroundLoad(img)
 {
     let canvas = document.getElementById("canvas_background");
     canvas.width = img.width;
@@ -84,52 +83,36 @@ function onTextureLoad(img, index)
     IMAGE_DATAS[index] = context.getImageData(0, 0, img.width, img.height);
 }
 
-function fetchFileNames()
+function onFileListDownload(response)
 {
-    let reader = new XMLHttpRequest();
-    reader.open("GET", BACKEND);
-    reader.onreadystatechange = () =>
+    let names = response.split('|');
+    for (let i=0; i<names.length; i++)
+        requestServer(ASSET_ROOT+names[i], "blob", onImageDownload, onTextureLoad, i);
+}
+
+function onImageDownload(response, extra)
+{
+    let bloburl = URL.createObjectURL(response);
+    let img = new Image();
+    img.src = bloburl;
+    img.onload = () => 
     {
-        if (reader.readyState == 4 && reader.status == 200)
-        {
-            let names = reader.responseText.split('|');
-            names.forEach(name => IMAGES.push(name));
-            loadTextures();
-        }
-    }
-    reader.send();
+        URL.revokeObjectURL(bloburl);
+        extra[0](img, extra[1]);
+    };
 }
 
-function loadTextures()
-{
-    if (IMAGES.length > 0)
-        for (let i=0; i<IMAGES.length; i++)
-            loadImage(ASSET_ROOT+IMAGES[i], onTextureLoad, i);
-}
-
-function loadImage(url, onload, index)
+function requestServer(url, type, onSuccess, ...extra)
 {
     let reader = new XMLHttpRequest();
     reader.open("GET", url);
     reader.onreadystatechange = () =>
     {
         if (reader.readyState == 4 && reader.status == 200)
-            drawImage(reader.response, onload, index);
+            onSuccess(reader.response, extra)
     }
-    reader.responseType = 'blob';
+    reader.responseType = type;
     reader.send();
-}
-
-function drawImage(blob, onload, index)
-{
-    let bloburl = URL.createObjectURL(blob);
-    let img = new Image();
-    img.src = bloburl;
-    img.onload = () => 
-    {
-        URL.revokeObjectURL(bloburl);
-        onload(img, index);
-    };
 }
 
 function toRGB(str)
@@ -151,6 +134,5 @@ function multiplyColor(c1, c2)
 {   
     c1 /= 255;
     c2 /= 255;
-    let c3 = c1 * c2;
-    return c3 * 255;
+    return c1 * c2 * 255;
 }
