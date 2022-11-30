@@ -1,12 +1,11 @@
 const BACKEND = "http://127.0.0.1:8080";
-const ASSET_ROOT = "assets/";
 const IMAGE_DATAS = [];
 
 var contextBackground;
 var activeImageData;
 var originalImageData;
 
-class rgb
+class RGB
 {
     constructor(r,g,b)
     {
@@ -16,10 +15,23 @@ class rgb
     }
 }
 
+class Request
+{
+    constructor(url, method, requestType, responseType, body, onSuccess)
+    {
+        this.url = url;
+        this.method = method;
+        this.requestType = requestType;
+        this.responseType = responseType;
+        this.body = body;
+        this.onSuccess = onSuccess;
+    }
+}
+
 function onPageLoad()
 {
-    requestServer(ASSET_ROOT+"house_floor.png", "blob", onImageDownload, onBackgroundLoad);
-    requestServer(BACKEND, "text", onFileListDownload);
+    requestServer(new Request(BACKEND, "GET", "image", "blob", "house_floor.png", onImageDownload), onBackgroundLoad);
+    requestServer(new Request(BACKEND, "POST", "file-list", "text", "", onFileListDownload));
 }
 
 function onReset()
@@ -86,8 +98,8 @@ function onTextureLoad(img, index)
 function onFileListDownload(response)
 {
     let names = response.split('|');
-    for (let i=0; i<names.length; i++)
-        requestServer(ASSET_ROOT+names[i], "blob", onImageDownload, onTextureLoad, i);
+    for (let i=0; i<(names.length-1); i++)
+        requestServer(new Request(BACKEND, "GET", "image", "blob", names[i], onImageDownload), onTextureLoad, i);
 }
 
 function onImageDownload(response, extra)
@@ -102,23 +114,25 @@ function onImageDownload(response, extra)
     };
 }
 
-function requestServer(url, type, onSuccess, ...extra)
+function requestServer(request, ...extra)
 {
     let reader = new XMLHttpRequest();
-    reader.open("GET", url);
+    reader.open(request.method, request.url);
+    reader.setRequestHeader("resource-type", request.requestType);
+    reader.setRequestHeader("resource-path", request.body);
     reader.onreadystatechange = () =>
     {
         if (reader.readyState == 4 && reader.status == 200)
-            onSuccess(reader.response, extra)
+            request.onSuccess(reader.response, extra);
     }
-    reader.responseType = type;
+    reader.responseType = request.responseType;
     reader.send();
 }
 
 function toRGB(str)
 {
     let match = str.match(/rgba?\((\d{1,3}), ?(\d{1,3}), ?(\d{1,3})\)?(?:, ?(\d(?:\.\d?))\))?/);
-    return match ? new rgb(match[1], match[2], match[3]) : new rgb(0,0,0);
+    return match ? new RGB(match[1], match[2], match[3]) : new RGB(0,0,0);
 }
 
 function duplicateImagedata(source)
