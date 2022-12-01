@@ -3,7 +3,6 @@ const IMAGE_DATAS = [];
 
 var contextBackground;
 var activeImageData;
-var originalImageData;
 
 class RGB
 {
@@ -34,12 +33,6 @@ function onPageLoad()
     requestServer(new Request(BACKEND, "POST", "file-list", "text", "", onFileListDownload));
 }
 
-function onReset()
-{
-    activeImageData = originalImageData;
-    contextBackground.putImageData(activeImageData, 0, 0);
-}
-
 function onColorSelect(grid_id)
 {
     let gridItem = document.getElementById(grid_id);
@@ -57,15 +50,14 @@ function onColorSelect(grid_id)
 
 function onImageSelect(index)
 {
-    activeImageData = duplicateImagedata(originalImageData);
     let pixels = activeImageData.data;
     let texels = IMAGE_DATAS[index].data;
     for(let i=0; i<pixels.length; i+=4)
     {
-        pixels[i] = multiplyColor(pixels[i], texels[i]);
-        pixels[i+1] = multiplyColor(pixels[i+1], texels[i+1]);
-        pixels[i+2] = multiplyColor(pixels[i+2], texels[i+2]);
-        pixels[i+3] = multiplyColor(pixels[i+3], texels[i+3]);;
+        pixels[i] = texels[i];
+        pixels[i+1] = texels[i+1];
+        pixels[i+2] = texels[i+2];
+        pixels[i+3] = texels[i+3];
     }
     contextBackground.putImageData(activeImageData, 0, 0);  
 }
@@ -77,8 +69,7 @@ function onBackgroundLoad(img)
     canvas.height = img.height;
     contextBackground = canvas.getContext("2d");
     contextBackground.drawImage(img, 0, 0);
-    originalImageData = contextBackground.getImageData(0, 0, img.width, img.height);
-    activeImageData = originalImageData;
+    activeImageData = contextBackground.getImageData(0, 0, img.width, img.height);
 }
 
 function onTextureLoad(img, index)
