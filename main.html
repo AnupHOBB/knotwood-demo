@@ -3,27 +3,20 @@
         <link rel="stylesheet" href="main_style.css"/>
         <script src="main.js"></script>
     </head>
-    <body onload="on_page_load()">
+    <body onload="onPageLoad()">
         <img src="assets/house.png" class="background"/>
         <canvas id = "canvas_background" class="canvas"></canvas>
-        <div class="side-bar">
-            <div id="heading"><h1 id="title" onclick="on_reset()">RESET</h1></div>
-            <div class="grid-container-color">
-                <div id = "color_item1" onclick="on_color_select('color_item1')" class="grid-item-color" style = "background-color: #FEA47F;"></div>
-                <div id = "color_item2" onclick="on_color_select('color_item2')" class="grid-item-color" style = "background-color: #EAB543"></div>
-                <div id = "color_item3" onclick="on_color_select('color_item3')" class="grid-item-color" style = "background-color: #55E6C1"></div>
-                <div id = "color_item4" onclick="on_color_select('color_item4')" class="grid-item-color" style = "background-color: #CAD3C8;"></div>
-                <div id = "color_item5" onclick="on_color_select('color_item5')" class="grid-item-color" style = "background-color: #F97F51"></div>
-                <div id = "color_item6" onclick="on_color_select('color_item6')" class="grid-item-color" style = "background-color: #F8EFBA"></div>
-                <div id = "color_item7" onclick="on_color_select('color_item7')" class="grid-item-color" style = "background-color: #58B19F"></div>
-                <div id = "color_item8" onclick="on_color_select('color_item8')" class="grid-item-color" style = "background-color: #819bb3"></div>
-                <div id = "color_item9" onclick="on_color_select('color_item9')" class="grid-item-color" style = "background-color: #e27aab"></div>
-            </div>
-            <div class="grid-container-image">
-                <div id = "image_item1" onclick="on_image_select(0)"><canvas id="canvas_image0" class="grid-item-image"></canvas></div>
-                <div id = "image_item2" onclick="on_image_select(1)"><canvas id="canvas_image1" class="grid-item-image"></canvas></div>
-                <div id = "image_item3" onclick="on_image_select(2)"><canvas id="canvas_image2" class="grid-item-image"></canvas></div>
-            </div>
+        <div id="list-color">
+            <div id = "color_item1" onclick="onColorSelect('color_item1')" class="list-item-color" style = "background-color: #FEA47F;"></div>
+            <div id = "color_item2" onclick="onColorSelect('color_item2')" class="list-item-color" style = "background-color: #EAB543"></div>
+            <div id = "color_item3" onclick="onColorSelect('color_item3')" class="list-item-color" style = "background-color: #55E6C1"></div>
+            <div id = "color_item4" onclick="onColorSelect('color_item4')" class="list-item-color" style = "background-color: #CAD3C8;"></div>
+            <div id = "color_item5" onclick="onColorSelect('color_item5')" class="list-item-color" style = "background-color: #F97F51"></div>
+            <div id = "color_item6" onclick="onColorSelect('color_item6')" class="list-item-color" style = "background-color: #F8EFBA"></div>
+            <div id = "color_item7" onclick="onColorSelect('color_item7')" class="list-item-color" style = "background-color: #58B19F"></div>
+            <div id = "color_item8" onclick="onColorSelect('color_item8')" class="list-item-color" style = "background-color: #819bb3"></div>
+            <div id = "color_item9" onclick="onColorSelect('color_item9')" class="list-item-color" style = "background-color: #e27aab"></div>
         </div>
+        <div id="list-image"></div>
     </body>
 </html>
