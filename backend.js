@@ -42,10 +42,11 @@ function fetchFrontend(req, res)
     }
     else if (type === "script")
     {
+        let requestURL = req.headers["referer"];
         res.writeHead(200, {"Content-type" : "text/javascript"});
         fs.readFile("main.js", "utf-8", (err, data) =>
             {
-                res.write(data);
+                res.write("const BACKEND = '"+requestURL+"';"+data);
                 res.end();
             }
         );

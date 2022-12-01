@@ -1,4 +1,3 @@
-const BACKEND = "http://127.0.0.1:8080";
 const IMAGE_DATAS = [];
 
 var contextBackground;
