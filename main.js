@@ -3,33 +3,10 @@ const IMAGE_DATAS = [];
 var contextBackground;
 var activeImageData;
 
-class RGB
-{
-    constructor(r,g,b)
-    {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-    }
-}
-
-class Request
-{
-    constructor(url, method, requestType, responseType, body, onSuccess)
-    {
-        this.url = url;
-        this.method = method;
-        this.requestType = requestType;
-        this.responseType = responseType;
-        this.body = body;
-        this.onSuccess = onSuccess;
-    }
-}
-
 function onPageLoad()
 {
-    requestServer(new Request(BACKEND, "GET", "image", "blob", "house_floor.png", onImageDownload), onBackgroundLoad);
-    requestServer(new Request(BACKEND, "POST", "file-list", "text", "", onFileListDownload));
+    requestServer({url:BACKEND, method:"GET", requestType:"image", responseType:"blob", body:"house_floor.png", onSuccess:onImageDownload}, onBackgroundLoad);
+    requestServer({url:BACKEND, method:"POST", requestType:"file-list", responseType:"text", body:"", onSuccess:onFileListDownload});
 }
 
 function onColorSelect(grid_id)
@@ -89,7 +66,7 @@ function onFileListDownload(response)
 {
     let names = response.split('|');
     for (let i=0; i<(names.length-1); i++)
-        requestServer(new Request(BACKEND, "GET", "image", "blob", names[i], onImageDownload), onTextureLoad, i);
+        requestServer({url:BACKEND, method:"GET", requestType:"image", responseType:"blob", body:names[i], onSuccess:onImageDownload}, onTextureLoad, i);
 }
 
 function onImageDownload(response, extra)
@@ -122,7 +99,7 @@ function requestServer(request, ...extra)
 function toRGB(str)
 {
     let match = str.match(/rgba?\((\d{1,3}), ?(\d{1,3}), ?(\d{1,3})\)?(?:, ?(\d(?:\.\d?))\))?/);
-    return match ? new RGB(match[1], match[2], match[3]) : new RGB(0,0,0);
+    return match ? {r:match[1], g:match[2], b:match[3]} : {r:0, g:0, b:0};
 }
 
 function duplicateImagedata(source)
