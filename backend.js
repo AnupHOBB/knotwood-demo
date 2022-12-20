@@ -1,58 +1,60 @@
-const ROOT = "assets/";
-const FLOOR_DIR = "floors/";
+const ROOT = "assets/"
+const FLOOR_DIR = "floors/"
+const SCRIPTS = ["utils.js", "main.js"]
+let scriptCounter = 0
 
-var http = require('http');
+var http = require('http')
 http.createServer((req, res) =>
     {
-        res.setHeader("Access-Control-Allow-Origin","*");
-        res.setHeader("Access-Control-Allow-Headers","resource-type, resource-path");
-        let type = req.headers["resource-type"];
+        res.setHeader("Access-Control-Allow-Origin","*")
+        res.setHeader("Access-Control-Allow-Headers","resource-type, resource-path")
+        let type = req.headers["resource-type"]
         if (type == undefined || type == null)
-            fetchFrontend(req, res);
+            fetchFrontend(req, res)
         else if (type === "file-list")
-            fetchDirectoryList(res);
+            fetchDirectoryList(res)
         else if (type === "image")
-            writeResponse(res, {fileName : ROOT+req.headers["resource-path"], contentType : "image/png", prefix : ""}); 
+            writeResponse(res, {fileName : ROOT+req.headers["resource-path"], contentType : "image/png", prefix : ""})
     }
 ).listen(8080);
 
 function fetchFrontend(req, res)
 {
-    let type = req.headers["sec-fetch-dest"];
+    let type = req.headers["sec-fetch-dest"]
     if (type === "document")
-        writeResponse(res, {fileName : "main.html", contentType : "text/html", prefix : ""});
+        writeResponse(res, {fileName : "main.html", contentType : "text/html"})
     else if (type === "style")
-        writeResponse(res, {fileName : "main_style.css", contentType : "text/css", prefix : ""});
+        writeResponse(res, {fileName : "main.css", contentType : "text/css"})
     else if (type === "script")
     {
-        let requestURL = req.headers["referer"];
-        writeResponse(res, {fileName : "main.js", contentType : "text/javascript", prefix : "const BACKEND = '"+requestURL+"';"});
+        writeResponse(res, {fileName : SCRIPTS[scriptCounter], contentType : "text/javascript"})
+        scriptCounter = (scriptCounter < (SCRIPTS.length-1))? scriptCounter+1 : 0
     }
     else if (type === "image")
-        writeResponse(res, {fileName : "assets/house.png", contentType : "image/png", prefix : ""});
+        writeResponse(res, {fileName : "assets/house.png", contentType : "image/png"})
 }
 
 function writeResponse(res, fileData)
 {
-    res.writeHead(200, {'Content-type' : fileData.contentType});
-    const fs = require("fs");
+    res.writeHead(200, {'Content-type' : fileData.contentType})
+    const fs = require("fs")
     fs.readFile(fileData.fileName, (err, data) =>
         {
-            res.write((fileData.prefix != "")?fileData.prefix + data:data);
-            res.end();
+            res.write(data)
+            res.end()
         }
-    );
+    )
 }
 
 function fetchDirectoryList(res)
 {
-    const path = ROOT+FLOOR_DIR;
-    const fs = require("fs");
-    res.writeHead(200, {'Content-type' : 'text/plain'});
+    const path = ROOT+FLOOR_DIR
+    const fs = require("fs")
+    res.writeHead(200, {'Content-type' : 'text/plain'})
     fs.readdir(path, (err, files) => 
         {
-            files.forEach(file => res.write(FLOOR_DIR+file+"|"));
-            res.end();
+            files.forEach(file => res.write(FLOOR_DIR+file+"|"))
+            res.end()
         }
-    );
+    )
 }
