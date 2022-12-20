@@ -22,18 +22,16 @@ function fetchFrontend(req, res)
 {
     let type = req.headers["sec-fetch-dest"]
     if (type === "document")
-        writeResponse(res, {fileName : "main.html", contentType : "text/html", prefix : ""})
+        writeResponse(res, {fileName : "main.html", contentType : "text/html"})
     else if (type === "style")
-        writeResponse(res, {fileName : "main.css", contentType : "text/css", prefix : ""})
+        writeResponse(res, {fileName : "main.css", contentType : "text/css"})
     else if (type === "script")
     {
-        let script = SCRIPTS[scriptCounter]
-        let prefixValue = (script == "main.js") ? "const BACKEND = '"+req.headers["referer"]+"'\n" : ""
-        writeResponse(res, {fileName : script, contentType : "text/javascript", prefix : prefixValue})
+        writeResponse(res, {fileName : SCRIPTS[scriptCounter], contentType : "text/javascript"})
         scriptCounter = (scriptCounter < (SCRIPTS.length-1))? scriptCounter+1 : 0
     }
     else if (type === "image")
-        writeResponse(res, {fileName : "assets/house.png", contentType : "image/png", prefix : ""})
+        writeResponse(res, {fileName : "assets/house.png", contentType : "image/png"})
 }
 
 function writeResponse(res, fileData)
@@ -42,7 +40,7 @@ function writeResponse(res, fileData)
     const fs = require("fs")
     fs.readFile(fileData.fileName, (err, data) =>
         {
-            res.write((fileData.prefix != "")?fileData.prefix + data:data)
+            res.write(data)
             res.end()
         }
     )
