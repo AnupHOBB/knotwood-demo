@@ -2,7 +2,6 @@ import { loadColors, requestServer, toRGB, duplicateImagedata, multiplyColor } f
 
 const IMAGE_DATAS = []
 const COLORS = ["#FEA47F", "#EAB543", "#55E6C1", "#CAD3C8", "#F97F51", "#F8EFBA", "#58B19F", "#819BB3", "#E27AAB"]
-const BACKEND = "http://127.0.0.1:8080"
 
 var contextBackground
 var activeImageData
