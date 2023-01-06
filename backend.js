@@ -14,7 +14,7 @@ http.createServer((req, res) =>
         else if (type === "file-list")
             fetchDirectoryList(res)
         else if (type === "image")
-            writeResponse(res, {fileName : ROOT+req.headers["resource-path"], contentType : "image/png", prefix : ""})
+            writeResponse(res, {fileName : ROOT+req.headers["resource-path"], contentType : "image/png"})
     }
 ).listen(8080);
 
@@ -27,7 +27,7 @@ function fetchFrontend(req, res)
         writeResponse(res, {fileName : "main.css", contentType : "text/css"})
     else if (type === "script")
     {
-        writeResponse(res, {fileName : SCRIPTS[scriptCounter], contentType : "text/javascript"})
+        writeResponse(res, {fileName : SCRIPTS[scriptCounter], contentType : "text/javascript", suffix : 'const BACKEND = "'+req.headers['host']+'"'})
         scriptCounter = (scriptCounter < (SCRIPTS.length-1))? scriptCounter+1 : 0
     }
     else if (type === "image")
@@ -40,7 +40,7 @@ function writeResponse(res, fileData)
     const fs = require("fs")
     fs.readFile(fileData.fileName, (err, data) =>
         {
-            res.write(data)
+            res.write((fileData.suffix != undefined)?data+fileData.suffix:data)
             res.end()
         }
     )
